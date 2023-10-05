@@ -48,18 +48,27 @@ http.createServer(function(req, res){
 		//et see kõik valmiks ja ära saadetaks
 		return res.end();
 	}
+	
 	else if (currentURL.pathname === "/tluphoto"){ 
-		res.writeHead(200, {"Content-Type": "text/html"});
-		res.write(pageHead);
-		res.write(pageBanner);
-		res.write(pageBody);
-		res.write('\n\t<hr>');
-		res.write('\n\t<img src="tlu_42.jpg" alt="TLÜ foto">');
-		res.write('\n\t <p><a href="/">Tagasi avalehele</a>!</p>');
-		res.write(pageFoot);
-		//et see kõik valmiks ja ära saadetaks
-		return res.end();
+		let htmlOutput = '\n\t<p>Pilti ei saa näidata!</p>';
+		//loen fotode nimekirja
+		fs.readdir('public/tluphotos', (err, fileList)=>{
+			if(err){
+				throw err;
+				tluPhotoPage(res, htmlOutput);
+			}
+			else {
+				//console.log(fileList.length);
+				let photoNum = Math.floor(Math.random() * fileList.length);
+				//console.log(photoNum);
+				//console.log('<img src="' + fileList[photoNum] + '" alt="TLÜ pilt">');
+				htmlOutput = '\n\t<img src="' + fileList[photoNum] + '" alt="TLÜ pilt">';
+				tluPhotoPage(res, htmlOutput);
+			}
+		});
+		
 	}
+	
 	else if (currentURL.pathname === "/banner.png"){
 		console.log("tahan pilti!");
 		let filePath = path.join(__dirname, "public", "banner/banner.png");
@@ -73,10 +82,12 @@ http.createServer(function(req, res){
 			}
 		});
 	}
-	else if (currentURL.pathname === "/tlu_42.jpg"){
+	//else if (currentURL.pathname === "/tlu_42.jpg"){
+	else if (path.extname(currentURL.pathname) === '.jpg'){
+		console.log(path.extname(currentURL.pathname));
 		console.log("tahan jpg pilti!");
-		let filePath = path.join(__dirname, "public", "tluphotos/tlu_42.jpg");
-		fs.readFile(filePath, (err, data)=>{
+		let filePath = path.join(__dirname, 'public', 'tluphotos');
+		fs.readFile(filePath + currentURL.pathname, (err, data)=>{
 			if(err){
 				throw err;
 			}
@@ -85,7 +96,10 @@ http.createServer(function(req, res){
 				res.end(data);
 			}
 		});
-	} 
+	}
+	else {
+		res.end('ERROR 404');
+	}
 }).listen(5200);
 
 function semesterInfo(){
@@ -108,6 +122,21 @@ function semesterInfo(){
 		htmlOutput += '\n\t <meter min="0" max="' + semesterDuration + '" value="' + semesterLastedFor + '"></meter>';
 	}
 	return '\n\t' + htmlOutput;
+}
+
+function tluPhotoPage(res, photoHTML){
+	//console.log(photoHTML);
+	res.writeHead(200, {"Content-Type": "text/html"});
+	res.write(pageHead);
+	res.write(pageBanner);
+	res.write(pageBody);
+	res.write('\n\t<hr>');
+	res.write(photoHTML);
+	//res.write('\n\t<img src="tlu_42.jpg" alt="TLÜ foto">');
+	res.write('\n\t <p><a href="/">Tagasi avalehele</a>!</p>');
+	res.write(pageFoot);
+	//et see kõik valmiks ja ära saadetaks
+	return res.end();
 }
 
 //5200   rinde

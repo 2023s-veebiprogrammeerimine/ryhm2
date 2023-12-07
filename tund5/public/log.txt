@@ -1,1 +1,1 @@
-Andrus,Rinde,10/11/2023;Vello,Orumets,10/11/2023;Oskar,Olulinemees,10/11/2023;Liilia,Lillemeri,10/11/2023;Dilbert,Imeline,10/11/2023;
+Andrus,Rinde,10/11/2023;Vello,Orumets,10/11/2023;Oskar,Olulinemees,10/11/2023;Liilia,Lillemeri,10/11/2023;Dilbert,Imeline,10/11/2023;Eero,Esimenemees,10/12/2023;a,s,10/12/2023;Luule,Kaunishing,10/12/2023;tere,maailm,10/12/2023;
